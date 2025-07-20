@@ -137,20 +137,32 @@ if __name__ == "__main__":
             elif n == source: node_colors[n] = 'purple'
             elif n == sink: node_colors[n] = 'gold'
 
+        # Compute and print shortest path once, then style edges
+        try:
+            sp = nx.shortest_path(G, source, sink)
+            shortest_edges = set(zip(sp, sp[1:]))
+            print(f"\nНайкоротший шлях від {source} до {sink}: {' -> '.join(sp)}")
+        except nx.NetworkXNoPath:
+            shortest_edges = set()
+            print(f"\nНемає шляху від {source} до {sink}")
+
         edge_colors = []
         edge_styles = []
         for u, v, data in G.edges(data=True):
-            if data['flow'] == 0:
+            if (u, v) in shortest_edges:
+                edge_colors.append('purple')
+                edge_styles.append('solid')
+            elif data['flow'] == 0:
                 edge_colors.append('lightgray')
                 edge_styles.append('dotted')
             elif data['flow'] == data['capacity']:
-                edge_colors.append('red') # Bottleneck
+                edge_colors.append('red')  # Bottleneck
                 edge_styles.append('solid')
             else:
                 edge_colors.append('black')
                 edge_styles.append('solid')
 
-        plt.figure(figsize=(20, 14))
+        plt.figure(figsize=(20, 24))
         
         for n in G.nodes():
             if n == source: G.nodes[n]["layer"] = 0
@@ -161,7 +173,7 @@ if __name__ == "__main__":
         pos = nx.multipartite_layout(G, subset_key="layer")
 
         nx.draw(G, pos, with_labels=True, node_color=[node_colors.get(n) for n in G.nodes()],
-                edge_color=edge_colors, style=edge_styles, node_size=3000, arrowsize=20)
+                edge_color=edge_colors, style=edge_styles, node_size=1000, arrowsize=20)
         edge_labels = {(u, v): f"{int(d['flow'])}/{d['capacity']}" for u, v, d in G.edges(data=True)}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='navy')
         
