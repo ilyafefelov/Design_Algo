@@ -119,6 +119,8 @@ if __name__ == "__main__":
                 print(f"{term}\tМагазин {shop[1:]:<5}\t{int(round(flow))}")
     print("-" * 50)
 
+    
+    
     # --- Enhanced Visualization ---
     try:
         import networkx as nx
@@ -161,6 +163,31 @@ if __name__ == "__main__":
             else:
                 edge_colors.append('black')
                 edge_styles.append('solid')
+
+        # --- Додатковий аналіз ---
+        # 2. Маршрути з найменшою пропускною здатністю і їх вплив на максимальний потік
+        min_cap = min(original_capacities.values())
+        routes_min = [f"{u}->{v} ({cap})" for (u, v), cap in original_capacities.items() if cap == min_cap]
+        print(f"\n2. Маршрути з найменшою пропускною здатністю = {min_cap}")
+        print("Маршрути:", ", ".join(routes_min))
+        print("Ці маршрути можуть бути вузькими місцями та обмежувати загальний потік.")
+
+        # 3. Магазини з найменшим отриманим потоком
+        total_received = {shop: flows['Термінал 1'][shop] + flows['Термінал 2'][shop] for shop in shop_caps}
+        min_recv = min(total_received.values())
+        shops_min = [shop for shop, val in total_received.items() if val == min_recv]
+        print(f"\n3. Магазини з найменшим отриманим потоком = {int(round(min_recv))}")
+        print("Магазини:", ", ".join(shops_min))
+        for shop in shops_min:
+            in_edges = [(u, v) for (u, v) in original_capacities if v == shop]
+            edges_info = [f"{u}->{v} ({original_capacities[(u, v)]})" for u, v in in_edges]
+            print(f"Маршрути до {shop}:", ", ".join(edges_info))
+        print("Збільшення їх пропускної здатності може покращити постачання цих магазинів.")
+
+        # 4. Вузькі місця (сатуровані ребра)
+        bottlenecks = [(u, v, data['capacity']) for u, v, data in G.edges(data=True) if data['flow'] == data['capacity']]
+        bn_info = [f"{u}->{v} ({cap})" for u, v, cap in bottlenecks]
+        print(f"\n4. Вузькі місця (сатуровані ребра): {', '.join(bn_info)}")
 
         plt.figure(figsize=(20, 24))
         
