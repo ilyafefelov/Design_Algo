@@ -1,0 +1,7 @@
+# Requirements for Homework 8
+# This assignment uses only Python standard library
+# No external dependencies required
+
+# For development and testing (optional):
+# pytest>=7.0.0  # Alternative test runner
+# coverage>=6.0  # Test coverage analysis
