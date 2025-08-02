@@ -1,0 +1,7 @@
+# Core requirements (no external dependencies needed for main functionality)
+
+# Optional requirements for visualization
+matplotlib>=3.5.0
+
+# Testing requirements
+pytest>=7.0.0
