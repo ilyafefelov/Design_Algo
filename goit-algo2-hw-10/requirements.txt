@@ -1,0 +1,13 @@
+# Core requirements for homework 10
+
+# For visualization in Task 1 (QuickSort comparison)
+matplotlib>=3.5.0
+
+# For testing
+pytest>=7.0.0
+
+# Standard library modules used (no additional installation needed):
+# - random (for randomized QuickSort and test data generation)
+# - time (for performance measurements)
+# - copy (for array copying in tests)
+# - unittest (for testing framework)
